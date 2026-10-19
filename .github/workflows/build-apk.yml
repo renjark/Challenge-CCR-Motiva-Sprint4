@@ -1,0 +1,63 @@
+# Gera o APK do Grovia na nuvem do GitHub e o publica em "Releases".
+# Não precisa de conta Expo nem de Android Studio.
+#
+# Como usar:
+#   • Aba Actions → "Build APK" → Run workflow   (gera o arquivo como artefato e como Release)
+#   • ou crie uma tag:  git tag v4.0.0 && git push origin v4.0.0
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Testes automatizados
+        run: npm test -- --ci
+
+      - name: Gerar projeto Android nativo
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Compilar APK de release
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon -Dorg.gradle.jvmargs="-Xmx3g"
+
+      - name: Renomear APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk Grovia-v4.0.0.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Grovia-apk
+          path: Grovia-v4.0.0.apk
+
+      - name: Publicar em Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v4.0.0' }}
+          name: Grovia v4.0.0 (APK)
+          files: Grovia-v4.0.0.apk
+          body: |
+            APK final do Grovia — Sprint 4 (Challenge CCR Motiva · FIAP).
+            Baixe o arquivo `Grovia-v4.0.0.apk` e instale em um Android 8.0 ou superior.
