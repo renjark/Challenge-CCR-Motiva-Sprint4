@@ -10,7 +10,7 @@ Aplicativo mobile para monitoramento, priorização e manutenção da vegetaçã
 | Entrega | Onde |
 |---|---|
 | 📱 **APK para download** | **[GitHub Releases — última versão](https://github.com/renjark/Challenge-CCR-Motiva-Sprint4/releases/latest)** |
-| 🎬 **Vídeo de pitch e demonstração** | `link video` |
+| 🎬 **Vídeo de pitch e demonstração** | [Link vídeo](https://youtu.be/oMAl-tFWeck)|
 | 💼 **Plano de negócio** | [`docs/PLANO-DE-NEGOCIO.md`](docs/PLANO-DE-NEGOCIO.md) |
 | 🧪 **Documento de testes (Sprint 4)** | [`docs/TESTES-SPRINT4.md`](docs/TESTES-SPRINT4.md) |
 
